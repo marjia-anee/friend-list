@@ -6,35 +6,37 @@ import User from './components/User/User';
 
 function App() {
 
- const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [team, setTeam] = useState([]);
 
- 
+useEffect(() => {
 
- useEffect(() => {
+    fetch('https://randomuser.me/api?results=15')
+      .then(res => res.json())
+      .then(data => setUsers(data.results))
+  }, [])
 
-  fetch ('https://randomuser.me/api/?results=15&fbclid=IwAR2Jb_myklf-xFoP10n9hVzF-xWuKZOWEMXFd5u0x-pM4LpbhD4BIGqJBmM')
-  .then (res => res.json ())
-  .then (data =>{ 
-    setUsers(data.results);
-   console.log(data.results);
-   const names = data.map (user => user.name)
-   console.log(names);
-  
-  } )
-  .catch (error => console.log(error))
+  const addMember = (name) => {
+    setTeam([...team, name])
 
- }, [])
-  
+  }
+
   return (
     <div>
-      <h1>user loaded: {users.length}</h1>
+      <h1>Friend List</h1>
+
       <ul>
-      {
-        users.map(user => <User user={user}> </User>)
-      }
+        {
+          team.map (m => <li>{m}</li>)
+        }
       </ul>
+
+      {
+        users.map(user => <User user={user} addMember = {addMember} > </User>)
+      }
+
     </div>
-    
+
   );
 }
 
